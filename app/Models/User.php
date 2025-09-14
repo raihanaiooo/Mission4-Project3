@@ -20,6 +20,7 @@ class User extends Authenticatable
         'PASSWORD',
         'ROLE',
         'FULL_NAME',
+        'PROFILE_IMAGE',
     ];
 
     protected $hidden = [
@@ -48,5 +49,10 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->ROLE === 'admin';
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'USER_ID', 'USER_ID');
     }
 }

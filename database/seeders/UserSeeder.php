@@ -18,13 +18,15 @@ class UserSeeder extends Seeder
             'username' => 'admin',
             'password' => 'admin123',
             'role'=>'admin',
-            'full_name' => 'admin-1'
+            'full_name' => 'Administrator',
+            'profile_image'=>null
         ]);
         User::create([
             'username' => 'Raihana',
             'password' => 'raihana123',
             'role'=>'student',
-            'full_name' => 'raihana aisha az-zahra'
+            'full_name' => 'Raihana Aisha Az-zahra',
+            'profile_image'=>null
         ]);
     }
 }
