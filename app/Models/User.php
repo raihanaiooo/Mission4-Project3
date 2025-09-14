@@ -8,41 +8,45 @@ use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'users';
+    protected $primaryKey = 'USER_ID';
+
+    public $timestamps = true;
+
     protected $fillable = [
-        'username',
-        'password',
-        'role',
-        'full_name',
+        'USERNAME',
+        'PASSWORD',
+        'ROLE',
+        'FULL_NAME',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
+        'PASSWORD',
     ];
 
-     public function setPasswordAttribute($value)
+    public function getAuthPassword()
     {
-        if ($value && \Illuminate\Support\Facades\Hash::needsRehash($value) ) {
-            $this->attributes['password'] = Hash::make($value);
+        return $this->PASSWORD;
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'USERNAME';
+    }
+
+    public function setPASSWORDAttribute($value)
+    {
+        if ($value && Hash::needsRehash($value)) {
+            $this->attributes['PASSWORD'] = Hash::make($value);
         } else {
-            $this->attributes['password'] = $value;
+            $this->attributes['PASSWORD'] = $value;
         }
     }
 
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        return $this->ROLE === 'admin';
     }
 }
