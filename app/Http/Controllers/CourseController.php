@@ -64,17 +64,29 @@ class CourseController extends Controller
     public function update(Request $request, Course $course)
     {
         $request->validate([
-            'COURSE_CODE'  => 'nullable|string|max:20',
-            'COURSE_NAME'  => 'required|string|max:100',
-            'DESCRIPTION'  => 'nullable|string',
-            'CREDITS'      => 'required|numeric|min:0',
-            'IMAGE'        => 'nullable|string|max:1024',
+            'course_code' => 'nullable|string|max:20',
+            'course_name' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'credits'     => 'required|numeric|min:0',
+            'image'       => 'nullable|image|max:2048',
         ]);
 
-        $course->update($request->all());
+        $data = [
+            'COURSE_CODE' => $request->course_code,
+            'COURSE_NAME' => $request->course_name,
+            'DESCRIPTION' => $request->description,
+            'CREDITS'     => $request->credits,
+        ];
+
+        if ($request->hasFile('image')) {
+            $data['IMAGE'] = $request->file('image')->store('courses','public');
+        }
+
+        $course->update($data);
 
         return redirect()->route('admin.courses.dashboard')->with('success', 'Course updated successfully!');
     }
+
 
     // DELETE
     public function destroy(Course $course) {

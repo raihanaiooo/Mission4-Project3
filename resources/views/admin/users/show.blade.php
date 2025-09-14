@@ -19,6 +19,5 @@
     </div>
 
     <a href="{{ route('admin.users.index') }}" class="btn btn-primary mt-3">Back to List</a>
-    <a href="{{ route('admin.users.edit', $user->USER_ID) }}" class="btn btn-warning mt-3">Edit User</a>
 </div>
 @endsection

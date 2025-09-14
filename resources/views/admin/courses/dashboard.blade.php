@@ -15,20 +15,20 @@
     @endif
 
     <table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Kode</th>
-            <th>Nama</th>
-            <th>Credits</th>
-            <th>Image</th>
-            <th>Aksi</th>
-        </tr>
+<thead>
+    <tr>
+        <th>No</th>
+        <th>Kode</th>
+        <th>Nama</th>
+        <th>Credits</th>
+        <th>Image</th>
+        <th>Aksi</th>
+    </tr>
     </thead>
     <tbody>
         @foreach($courses as $course)
         <tr>
-            <td>{{ $course->COURSE_ID }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $course->COURSE_CODE }}</td>
             <td>{{ $course->COURSE_NAME }}</td>
             <td>{{ $course->CREDITS }}</td>
@@ -50,6 +50,5 @@
         @endforeach
     </tbody>
     </table>
-
 </body>
 </html>
