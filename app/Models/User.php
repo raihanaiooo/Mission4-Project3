@@ -32,11 +32,13 @@ class User extends Authenticatable
         return $this->PASSWORD;
     }
 
+    // Method untuk mengatur username
     public function getAuthIdentifierName()
     {
         return 'USERNAME';
     }
 
+    // Method untuk mengatur password
     public function setPASSWORDAttribute($value)
     {
         if ($value && Hash::needsRehash($value)) {
@@ -46,11 +48,13 @@ class User extends Authenticatable
         }
     }
 
+    // Method untuk memeriksa apakah pengguna adalah admin
     public function isAdmin()
     {
         return $this->ROLE === 'admin';
     }
 
+    // Relasi ke Student
     public function student()
     {
         return $this->hasOne(Student::class, 'USER_ID', 'USER_ID');

@@ -10,11 +10,9 @@ class CourseController extends Controller
     // READ
     public function dashboard()
     {
-        $courses = Course::all(); // Ambil semua course
+        $courses = Course::all();
         return view('admin.dashboard', compact('courses'));
     }
-
-
 
     // CREATE
     public function create()
@@ -26,14 +24,26 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'COURSE_CODE'  => 'nullable|string|max:20',
-            'COURSE_NAME'  => 'required|string|max:100',
-            'DESCRIPTION'  => 'nullable|string',
-            'CREDITS'      => 'required|numeric|min:0',
-            'IMAGE'        => 'nullable|string|max:255',
+            'course_code' => 'nullable|string|max:20',
+            'course_name' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'credits'     => 'required|numeric|min:0',
+            'image'       => 'nullable|image|max:2048', // validasi file gambar
         ]);
 
-        Course::create($request->all());
+        $data = [
+            'COURSE_CODE' => $request->course_code,
+            'COURSE_NAME' => $request->course_name,
+            'DESCRIPTION' => $request->description,
+            'CREDITS' => $request->credits,
+        ];
+
+        if ($request->hasFile('image')) {
+            $data['IMAGE'] = $request->file('image')->store('courses','public');
+        }
+
+        Course::create($data);
+
 
         return redirect()->route('admin.dashboard')->with('success', 'Course created successfully!');
     }
@@ -44,13 +54,8 @@ class CourseController extends Controller
         return view('admin.show', compact('course'));
     }
 
-
     // EDIT
-    // public function edit($id){
-    //     $course = Course::findOrFail($id);
-    //     return view('admin.edit', compact('course'));
-    // }
-    public function edit(Course $course)
+     public function edit(Course $course)
     {
         return view('admin.edit', compact('course'));
     }

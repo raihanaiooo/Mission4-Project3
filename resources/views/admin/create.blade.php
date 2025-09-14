@@ -34,10 +34,6 @@
         <div class="mb-3">
             <label for="image" class="form-label">Course Image</label>
             <input type="file" name="image" id="image" class="form-control">
-            if($request->hasFile('image')){
-                $path = $request->file('image')->store('courses', 'public');
-                $data['IMAGE'] = $path;
-            }
             @error('image') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 

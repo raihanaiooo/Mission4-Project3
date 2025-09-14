@@ -31,14 +31,6 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
 });
 
 
-// Route::middleware(['auth.session', 'role:admin'])
-//     ->prefix('admin')
-//     ->name('admin.')
-//     ->group(function () {
-//         Route::get('/dashboard', [\App\Http\Controllers\CourseController::class, 'dashboard'])->name('dashboard');
-//         Route::resource('courses', CourseController::class);
-//     });
-
 // Role student
 Route::middleware(['auth.session', 'role:student'])->group(function () {
     Route::get('/student/dashboard', function () {
