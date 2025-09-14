@@ -20,6 +20,18 @@
         </div>
 
         <div class="mb-3">
+            <label for="STUDENT_NUMBER">Student Number</label>
+            <input type="text" name="STUDENT_NUMBER" class="form-control" value="{{ old('STUDENT_NUMBER') }}">
+            @error('STUDENT_NUMBER') <small class="text-danger">{{ $message }}</small> @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="ENTRY_YEAR">Entry Year</label>
+            <input type="number" name="ENTRY_YEAR" class="form-control" value="{{ old('ENTRY_YEAR') }}">
+            @error('ENTRY_YEAR') <small class="text-danger">{{ $message }}</small> @enderror
+        </div>
+
+        <div class="mb-3">
             <label for="ROLE">Role</label>
             <select name="ROLE" class="form-control" required>
                 <option value="student" {{ old('ROLE')=='student' ? 'selected' : '' }}>Student</option>

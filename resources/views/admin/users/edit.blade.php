@@ -22,13 +22,6 @@
             @error('FULL_NAME') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
-        <!-- Email -->
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" name="EMAIL" id="email" class="form-control" value="{{ old('EMAIL', $user->EMAIL) }}" required>
-            @error('EMAIL') <small class="text-danger">{{ $message }}</small> @enderror
-        </div>
-
         <!-- Role -->
         <div class="mb-3">
             <label for="role" class="form-label">Role</label>
