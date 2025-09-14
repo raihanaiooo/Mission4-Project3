@@ -11,13 +11,13 @@ class CourseController extends Controller
     public function dashboard()
     {
         $courses = Course::all();
-        return view('admin.dashboard', compact('courses'));
+        return view('admin.courses.dashboard', compact('courses'));
     }
 
     // CREATE
     public function create()
     {
-        return view('admin.create');
+        return view('admin.courses.create');
     }
 
     // STORE
@@ -45,19 +45,19 @@ class CourseController extends Controller
         Course::create($data);
 
 
-        return redirect()->route('admin.dashboard')->with('success', 'Course created successfully!');
+        return redirect()->route('admin.courses.dashboard')->with('success', 'Course created successfully!');
     }
 
     // SHOW (detail per course)
     public function show(Course $course)
     {
-        return view('admin.show', compact('course'));
+        return view('admin.courses.show', compact('course'));
     }
 
     // EDIT
      public function edit(Course $course)
     {
-        return view('admin.edit', compact('course'));
+        return view('admin.courses.edit', compact('course'));
     }
 
     // UPDATE
@@ -73,12 +73,12 @@ class CourseController extends Controller
 
         $course->update($request->all());
 
-        return redirect()->route('admin.dashboard')->with('success', 'Course updated successfully!');
+        return redirect()->route('admin.courses.dashboard')->with('success', 'Course updated successfully!');
     }
 
     // DELETE
     public function destroy(Course $course) {
         $course->delete();
-        return redirect()->route('admin.dashboard')->with('success', 'Course deleted successfully!');
+        return redirect()->route('admin.courses.dashboard')->with('success', 'Course deleted successfully!');
     }
 }
