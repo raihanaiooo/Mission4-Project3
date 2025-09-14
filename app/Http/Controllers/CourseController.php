@@ -8,11 +8,13 @@ use App\Models\Course;
 class CourseController extends Controller
 {
     // READ
-    public function index()
+    public function dashboard()
     {
-        $courses = Course::all();
-        return view('admin.index', compact('courses'));
+        $courses = Course::all(); // Ambil semua course
+        return view('admin.dashboard', compact('courses'));
     }
+
+
 
     // CREATE
     public function create()
@@ -24,13 +26,16 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'course_name' => 'required|string|max:100',
-            'credits' => 'required|numeric|min:0',
+            'COURSE_CODE'  => 'nullable|string|max:20',
+            'COURSE_NAME'  => 'required|string|max:100',
+            'DESCRIPTION'  => 'nullable|string',
+            'CREDITS'      => 'required|numeric|min:0',
+            'IMAGE'        => 'nullable|string|max:255',
         ]);
 
-        Course::create($request->only('course_name', 'credits'));
+        Course::create($request->all());
 
-        return redirect()->route('admin.courses.index')->with('success', 'Course created successfully!');
+        return redirect()->route('admin.dashboard')->with('success', 'Course created successfully!');
     }
 
     // SHOW (detail per course)
@@ -39,9 +44,14 @@ class CourseController extends Controller
         return view('admin.show', compact('course'));
     }
 
+
     // EDIT
-    public function edit($id){
-        $course = Course::findOrFail($id);
+    // public function edit($id){
+    //     $course = Course::findOrFail($id);
+    //     return view('admin.edit', compact('course'));
+    // }
+    public function edit(Course $course)
+    {
         return view('admin.edit', compact('course'));
     }
 
@@ -49,20 +59,21 @@ class CourseController extends Controller
     public function update(Request $request, Course $course)
     {
         $request->validate([
-            'course_name' => 'required|string|max:100',
-            'credits' => 'required|numeric|min:0',
+            'COURSE_CODE'  => 'nullable|string|max:20',
+            'COURSE_NAME'  => 'required|string|max:100',
+            'DESCRIPTION'  => 'nullable|string',
+            'CREDITS'      => 'required|numeric|min:0',
+            'IMAGE'        => 'nullable|string|max:1024',
         ]);
 
-        $course->update($request->only('course_name', 'credits'));
+        $course->update($request->all());
 
-        return redirect()->route('admin.courses.index')->with('success', 'Course updated successfully!');
+        return redirect()->route('admin.dashboard')->with('success', 'Course updated successfully!');
     }
 
     // DELETE
-    public function destroy($id)
-    {
-        $course = Course::findOrFail($id);
+    public function destroy(Course $course) {
         $course->delete();
-        return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully!');
+        return redirect()->route('admin.dashboard')->with('success', 'Course deleted successfully!');
     }
 }
