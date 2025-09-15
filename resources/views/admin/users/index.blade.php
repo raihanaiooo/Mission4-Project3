@@ -1,50 +1,71 @@
 @extends('layouts.app')
+@include('layouts.navbar-admin')
 
 @section('content')
-<div class="container">
-    <h2>Users</h2>
+<div class="container mx-auto px-6 py-8">
+    {{-- Navbar khusus admin --}}
 
-    <a href="{{ route('admin.users.create') }}" class="btn btn-success mb-2">Tambah User</a>
+    <h2 class="text-2xl font-bold mb-6">Manage Users</h2>
 
+    <!-- Tombol tambah user -->
+    <a href="{{ route('admin.users.create') }}" 
+       class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition mb-4">
+        + Tambah User
+    </a>
+
+    <!-- Flash message -->
     @if(session('success'))
-        <p style="color: green">{{ session('success') }}</p>
+        <div class="mb-4 p-3 rounded-lg bg-green-100 border border-green-300 text-green-800">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <table border="1" cellpadding="10">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Role</th>
-                <th>Profile</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($users as $user)
-            <tr>
-                <td>{{ $user->USER_ID }}</td>
-                <td>{{ $user->USERNAME }}</td>
-                <td>{{ $user->FULL_NAME }}</td>
-                <td>{{ $user->ROLE }}</td>
-                <td>
-                    @if($user->PROFILE_IMAGE)
-                        <img src="{{ asset('storage/'.$user->PROFILE_IMAGE) }}" width="60">
-                    @endif
-                </td>
-                <td>
-                    <a href="{{ route('admin.users.show', $user->USER_ID) }}">Detail</a> |
-                    <a href="{{ route('admin.users.edit', $user->USER_ID) }}">Edit</a> |
-                    <form action="{{ route('admin.users.destroy', $user->USER_ID) }}" method="POST" style="display:inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <!-- Tabel Users -->
+    <div class="overflow-x-auto bg-white rounded-xl shadow-md">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-gray-200 text-gray-700">
+                <tr>
+                    <th class="px-4 py-2">ID</th>
+                    <th class="px-4 py-2">Username</th>
+                    <th class="px-4 py-2">Full Name</th>
+                    <th class="px-4 py-2">Role</th>
+                    <th class="px-4 py-2">Profile</th>
+                    <th class="px-4 py-2">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @foreach($users as $user)
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-4 py-2">{{ $user->USER_ID }}</td>
+                        <td class="px-4 py-2">{{ $user->USERNAME }}</td>
+                        <td class="px-4 py-2">{{ $user->FULL_NAME }}</td>
+                        <td class="px-4 py-2">{{ $user->ROLE }}</td>
+                        <td class="px-4 py-2">
+                            @if($user->PROFILE_IMAGE)
+                                <img src="{{ asset('storage/'.$user->PROFILE_IMAGE) }}" 
+                                     class="w-16 h-16 object-cover rounded-md">
+                            @endif
+                        </td>
+                        <td class="px-4 py-2 space-x-2">
+                            <a href="{{ route('admin.users.show', $user->USER_ID) }}" 
+                               class="text-blue-600 hover:underline">Detail</a>
+                            <a href="{{ route('admin.users.edit', $user->USER_ID) }}" 
+                               class="text-yellow-600 hover:underline">Edit</a>
+                            <form action="{{ route('admin.users.destroy', $user->USER_ID) }}" 
+                                  method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        onclick="return confirm('Yakin hapus?')" 
+                                        class="text-red-600 hover:underline">
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection
