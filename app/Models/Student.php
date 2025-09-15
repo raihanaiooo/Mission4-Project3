@@ -30,4 +30,6 @@ class Student extends Model
     {
         return $this->hasMany(Take::class, 'STUDENT_ID', 'STUDENT_ID');
     }
+
+    
 }

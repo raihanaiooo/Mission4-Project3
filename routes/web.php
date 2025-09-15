@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\EnrollController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,9 +46,14 @@ Route::middleware(['auth.session', 'role:admin'])->prefix('admin')->name('admin.
 });
 
 
-// Role student
-Route::middleware(['auth.session', 'role:student'])->group(function () {
-    Route::get('/student/dashboard', function () {
-        return view('student.dashboard');
-    })->name('student.dashboard');
-});
+Route::middleware(['auth.session', 'role:student'])
+    ->prefix('student')
+    ->name('student.')
+    ->group(function () {
+        Route::get('/dashboard', [EnrollController::class, 'index'])->name('dashboard');
+        Route::get('/courses', [EnrollController::class, 'index'])->name('courses.index');
+        Route::post('/courses/{id}/enroll', [EnrollController::class, 'enroll'])->name('courses.enroll');
+        Route::get('/my-courses', [EnrollController::class, 'myCourses'])->name('courses.my');
+    });
+
+

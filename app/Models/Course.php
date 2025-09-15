@@ -24,4 +24,6 @@ class Course extends Model
     {
         return $this->hasMany(Take::class, 'COURSE_ID', 'COURSE_ID');
     }
+
+    
 }

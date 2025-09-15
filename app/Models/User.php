@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'users';
+    protected $table = 'USERS';
     protected $primaryKey = 'USER_ID';
 
     public $timestamps = true;
@@ -59,4 +59,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(Student::class, 'USER_ID', 'USER_ID');
     }
+
 }
