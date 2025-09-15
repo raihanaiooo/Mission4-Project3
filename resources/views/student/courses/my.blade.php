@@ -16,18 +16,18 @@
         </button>
     </form>
 
-    <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
-        <table class="min-w-full bg-white divide-y divide-gray-200">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">No</th>
-                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Kode</th>
-                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Nama</th>
-                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Credits</th>
-                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Grade</th>
-                </tr>
-            </thead>
+    <div class="w-full overflow-x-auto rounded-lg shadow-md border border-gray-200">
+    <table class="w-full min-w-[600px] bg-white divide-y divide-gray-200">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">No</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Kode</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Nama</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Credits</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Grade</th>
+            </tr>
+        </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @foreach($takes as $index => $take)
                 <tr class="hover:bg-gray-50">
@@ -45,11 +45,12 @@
                 </tr>
                 @endforeach
             </tbody>
-        </table>
+    </table>
 
         @if($takes->isEmpty())
             <p class="p-4 text-gray-500">Tidak ada course yang ditemukan.</p>
         @endif
     </div>
+
 </div>
 @endsection

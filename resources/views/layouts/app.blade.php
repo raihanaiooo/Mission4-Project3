@@ -15,8 +15,6 @@
         </div>
     </main>
 
-
-
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-300 text-center py-4">
         <p>&copy; {{ date('Y') }} All rights reserved.</p>
