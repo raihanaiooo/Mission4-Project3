@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@include('layouts.navbar-student')
 @section('content')
 <div class="container">
     <h2>Course Saya</h2>

@@ -1,53 +1,29 @@
 @extends('layouts.app')
 
+@include('layouts.navbar-student')
 @section('content')
-<div class="container">
-    <h1>Student Dashboard</h1>
-    <p>Halo, {{ session('user_name') }} ({{ session('user_role') }})</p>
 
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
+<div class="container mx-auto px-6 py-8">
+    <h1 class="text-3xl font-bold mb-4">Student Dashboard</h1>
 
-    <hr>
+    <h2 class="text-2xl font-semibold mb-4">Daftar Courses</h2>
 
-    <h2>Daftar Courses</h2>
-
-    @if(session('success'))
-        <p style="color: green">{{ session('success') }}</p>
-    @endif
-    @if(session('error'))
-        <p style="color: red">{{ session('error') }}</p>
-    @endif
-
-    <table border="1" cellpadding="10">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Kode</th>
-                <th>Nama</th>
-                <th>Credits</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($courses as $index => $course)
-            <tr>
-                <td>{{ $index+1 }}</td>
-                <td>{{ $course->COURSE_CODE }}</td>
-                <td>{{ $course->COURSE_NAME }}</td>
-                <td>{{ $course->CREDITS }}</td>
-                <td>
+    @if($courses->count() > 0)
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            @foreach($courses as $course)
+                <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition duration-300">
+                    <h3 class="text-lg font-bold mb-2">{{ $course->COURSE_NAME }}</h3>
+                    <p class="text-gray-600 mb-1"><strong>Kode:</strong> {{ $course->COURSE_CODE }}</p>
+                    <p class="text-gray-600 mb-3"><strong>Credits:</strong> {{ $course->CREDITS }}</p>
                     <form action="{{ route('student.courses.enroll', ['id' => $course->COURSE_ID]) }}" method="POST">
                         @csrf
-                        <button type="submit">Enroll</button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md transition w-full">Enroll</button>
                     </form>
-
-                </td>
-            </tr>
+                </div>
             @endforeach
-        </tbody>
-    </table>
+        </div>
+    @else
+        <p class="text-gray-600">Belum ada course tersedia.</p>
+    @endif
 </div>
 @endsection
