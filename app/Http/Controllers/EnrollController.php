@@ -82,18 +82,28 @@ class EnrollController extends Controller
         return redirect()->back()->with('success', 'Berhasil enroll ke course.');
     }
 
-    public function myCourses()
+    public function myCourses(Request $request)
     {
         $studentId = $this->getStudentId();
 
-        // Ambil courses lewat TAKES dengan eager load course
-        $takes = Take::with('course')
-                     ->where('STUDENT_ID', $studentId)
-                     ->orderBy('ENROLL_DATE', 'desc')
-                     ->get();
+        $query = Take::with('course')
+                    ->where('STUDENT_ID', $studentId)
+                    ->orderBy('ENROLL_DATE', 'desc');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('course', function($q) use ($search) {
+                $q->where('COURSE_NAME', 'like', "%{$search}%")
+                ->orWhere('COURSE_CODE', 'like', "%{$search}%");
+            });
+        }
+
+        // Ambil hasil query
+        $takes = $query->get();
 
         return view('student.courses.my', compact('takes'));
     }
+
 
     public function show($id)
     {
