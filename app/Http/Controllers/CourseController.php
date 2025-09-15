@@ -8,9 +8,16 @@ use App\Models\Course;
 class CourseController extends Controller
 {
     // READ
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $courses = Course::all();
+        $query = Course::query();
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('COURSE_NAME', 'like', "%{$search}%")
+                ->orWhere('COURSE_CODE', 'like', "%{$search}%");
+        }
+        
+        $courses = $query->orderBy('COURSE_NAME')->get();
         return view('admin.courses.dashboard', compact('courses'));
     }
 

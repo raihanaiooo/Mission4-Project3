@@ -8,8 +8,19 @@ use App\Models\User;
 class AdminUserController extends Controller
 {
     // READ
-    public function index(){
-        $users = User::all();
+    public function index(Request $request){
+
+        $query = User::query();
+        
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('USERNAME', 'like', "%{$search}%")
+                ->orWhere('FULL_NAME', 'like', "%{$search}%")
+                ->orWhere('ROLE', 'like', "%{$search}%");
+        }
+
+        $users = $query->orderBy('FULL_NAME')->get();
+
         return view('admin.users.index', compact('users'));
     }
 

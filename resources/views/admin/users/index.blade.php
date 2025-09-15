@@ -20,6 +20,17 @@
         </div>
     @endif
 
+    <!-- Search Form -->
+    <form method="GET" action="{{ route('admin.users.index') }}" class="mb-4 flex">
+        <input type="text" name="search" value="{{ request('search') }}"
+            placeholder="Cari user..."
+            class="flex-1 px-4 py-2 rounded-l-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <button type="submit"
+            class="bg-green-600 text-white px-4 py-2 rounded-r-md hover:bg-green-700 transition">
+            Cari
+        </button>
+    </form>
+
     <!-- Tabel Users -->
     <div class="overflow-x-auto bg-white rounded-xl shadow-md">
         <table class="w-full text-left border-collapse">
