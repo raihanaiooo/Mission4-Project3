@@ -30,8 +30,8 @@ class Course extends Model
         return $this->belongsToMany(
             User::class,
             'TAKES',
-            'COURSE_ID',     // foreign key di pivot untuk Course
-            'STUDENT_ID'     // foreign key di pivot untuk User
+            'COURSE_ID',    
+            'STUDENT_ID'     
         );
     }
 

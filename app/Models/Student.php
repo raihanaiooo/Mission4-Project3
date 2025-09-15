@@ -36,9 +36,9 @@ class Student extends Model
     {
         return $this->belongsToMany(
             Course::class,
-            'TAKES',       // pivot table
-            'STUDENT_ID',  // foreign key di pivot untuk Student
-            'COURSE_ID'    // foreign key di pivot untuk Course
+            'TAKES',       
+            'STUDENT_ID',  
+            'COURSE_ID'    
         )->withPivot('STATUS', 'GRADE', 'ENROLL_DATE');
     }
 

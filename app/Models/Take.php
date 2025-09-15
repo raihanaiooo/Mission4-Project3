@@ -18,7 +18,6 @@ class Take extends Model
         'STATUS',
     ];
 
-
     // Relasi ke Student
     public function student()
     {

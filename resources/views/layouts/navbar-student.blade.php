@@ -4,7 +4,6 @@
             MyApp
         </div>
         <div class="space-x-4">
-            <!-- <a href="{{ route('student.dashboard') }}" class="text-gray-700 hover:text-blue-600 transition">Dashboard</a> -->
             <a href="{{ route('student.courses.index') }}" class="text-gray-700 hover:text-blue-600 transition">Courses</a>
             <a href="{{ route('student.courses.my') }}" class="text-gray-700 hover:text-blue-600 transition">My Courses</a>
         </div>

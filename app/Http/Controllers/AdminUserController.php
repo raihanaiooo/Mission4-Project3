@@ -47,8 +47,6 @@ class AdminUserController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
-
-
     // EDIT
     public function edit(User $user)
     {

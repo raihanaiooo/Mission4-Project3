@@ -45,7 +45,7 @@ Route::middleware(['auth.session', 'role:admin'])->prefix('admin')->name('admin.
     ]);
 });
 
-
+// Role student
 Route::middleware(['auth.session', 'role:student'])
     ->prefix('student')
     ->name('student.')

@@ -64,10 +64,10 @@ class User extends Authenticatable
         return $this->hasManyThrough(
             Take::class,
             Student::class,
-            'USER_ID',      // FK di STUDENTS ke USERS
-            'STUDENT_ID',   // FK di TAKES ke STUDENTS
-            'USER_ID',      // PK di USERS
-            'STUDENT_ID'    // PK di STUDENTS
+            'USER_ID',      
+            'STUDENT_ID',   
+            'USER_ID',      
+            'STUDENT_ID'    
         );
     }
 

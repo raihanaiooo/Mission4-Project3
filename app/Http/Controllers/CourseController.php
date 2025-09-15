@@ -87,7 +87,6 @@ class CourseController extends Controller
         return redirect()->route('admin.courses.dashboard')->with('success', 'Course updated successfully!');
     }
 
-
     // DELETE
     public function destroy(Course $course) {
         $course->delete();
