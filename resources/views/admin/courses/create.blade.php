@@ -1,44 +1,76 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h2>Add New Course</h2>
+<div class="max-w-2xl mx-auto">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Course</h2>
 
-    <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
-        <div class="mb-3">
-            <label for="course_code" class="form-label">Course Code</label>
-            <input type="text" name="course_code" id="course_code" class="form-control" value="{{ old('course_code') }}" required>
-            @error('course_code') <small class="text-danger">{{ $message }}</small> @enderror
+        <!-- Course Code -->
+        <div>
+            <label for="course_code" class="block text-sm font-medium text-gray-700 mb-1">Course Code</label>
+            <input type="text" name="course_code" id="course_code" 
+                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                   value="{{ old('course_code') }}" required>
+            @error('course_code') 
+                <small class="text-red-600">{{ $message }}</small> 
+            @enderror
         </div>
 
-        <div class="mb-3">
-            <label for="course_name" class="form-label">Course Name</label>
-            <input type="text" name="course_name" id="course_name" class="form-control" value="{{ old('course_name') }}" required>
-            @error('course_name') <small class="text-danger">{{ $message }}</small> @enderror
+        <!-- Course Name -->
+        <div>
+            <label for="course_name" class="block text-sm font-medium text-gray-700 mb-1">Course Name</label>
+            <input type="text" name="course_name" id="course_name" 
+                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                   value="{{ old('course_name') }}" required>
+            @error('course_name') 
+                <small class="text-red-600">{{ $message }}</small> 
+            @enderror
         </div>
 
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
-            @error('description') <small class="text-danger">{{ $message }}</small> @enderror
+        <!-- Description -->
+        <div>
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea name="description" id="description" rows="4"
+                      class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ old('description') }}</textarea>
+            @error('description') 
+                <small class="text-red-600">{{ $message }}</small> 
+            @enderror
         </div>
 
-        <div class="mb-3">
-            <label for="credits" class="form-label">Credits</label>
-            <input type="number" step="0.01" name="credits" id="credits" class="form-control" value="{{ old('credits') }}" required>
-            @error('credits') <small class="text-danger">{{ $message }}</small> @enderror
+        <!-- Credits -->
+        <div>
+            <label for="credits" class="block text-sm font-medium text-gray-700 mb-1">Credits</label>
+            <input type="number" step="0.01" name="credits" id="credits"
+                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                   value="{{ old('credits') }}" required>
+            @error('credits') 
+                <small class="text-red-600">{{ $message }}</small> 
+            @enderror
         </div>
 
-        <div class="mb-3">
-            <label for="image" class="form-label">Course Image</label>
-            <input type="file" name="image" id="image" class="form-control">
-            @error('image') <small class="text-danger">{{ $message }}</small> @enderror
+        <!-- Course Image -->
+        <div>
+            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Course Image</label>
+            <input type="file" name="image" id="image"
+                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            @error('image') 
+                <small class="text-red-600">{{ $message }}</small> 
+            @enderror
         </div>
 
-        <button type="submit" class="btn btn-success">Save</button>
-        <a href="{{ route('admin.courses.dashboard') }}" class="btn btn-secondary">Cancel</a>
+        <!-- Buttons -->
+        <div class="flex items-center space-x-4">
+            <button type="submit" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition">
+                Save
+            </button>
+            <a href="{{ route('admin.courses.dashboard') }}" 
+               class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition">
+                Cancel
+            </a>
+        </div>
     </form>
 </div>
 @endsection
