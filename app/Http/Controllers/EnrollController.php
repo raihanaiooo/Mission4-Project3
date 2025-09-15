@@ -9,20 +9,24 @@ use App\Models\User;
 
 class EnrollController extends Controller
 {
-    // Menampilkan semua courses dengan status enrolled
-    public function index()
+    private function getStudentId()
     {
         $userId = session('user_id');
         if (!$userId) {
-            return redirect()->route('login')->with('error', 'Sesi login habis, silakan login lagi.');
+            abort(403, 'Sesi login habis, silakan login lagi.');
         }
 
         $user = User::find($userId);
         if (!$user || !$user->student) {
-            return redirect()->back()->with('error', 'Data mahasiswa untuk akun ini belum tersedia.');
+            abort(403, 'Data mahasiswa untuk akun ini belum tersedia.');
         }
 
-        $studentId = $user->student->STUDENT_ID;
+        return $user->student->STUDENT_ID;
+    }
+
+    public function index()
+    {
+        $studentId = $this->getStudentId();
 
         // Ambil semua courses
         $courses = Course::all();
@@ -35,20 +39,9 @@ class EnrollController extends Controller
         return view('student.courses.index', compact('courses', 'userTakes'));
     }
 
-    // Enroll ke course
     public function enroll($id)
     {
-        $userId = session('user_id');
-        if (!$userId) {
-            return redirect()->route('login')->with('error', 'Sesi login habis, silakan login lagi.');
-        }
-
-        $user = User::find($userId);
-        if (!$user || !$user->student) {
-            return redirect()->back()->with('error', 'Data mahasiswa untuk akun ini belum tersedia.');
-        }
-
-        $studentId = $user->student->STUDENT_ID;
+        $studentId = $this->getStudentId();
 
         $course = Course::find($id);
         if (!$course) {
@@ -65,37 +58,44 @@ class EnrollController extends Controller
         }
 
         // Simpan ke tabel TAKES
-        Take::create([
-            'STUDENT_ID' => $studentId,
-            'COURSE_ID'  => $id,
-            'ENROLL_DATE'=> now(),
-            'GRADE'      => 0.00,
-            'STATUS'     => 'active',
-        ]);
+        try {
+            Take::create([
+                'STUDENT_ID' => $studentId,
+                'COURSE_ID'  => $id,
+                'ENROLL_DATE'=> now(),
+                'GRADE'      => 0.00,
+                'STATUS'     => 'active',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat enroll.');
+        }
 
-        return redirect()->route('student.courses.my')->with('success', 'Berhasil enroll ke course.');
+        return redirect()->back()->with('success', 'Berhasil enroll ke course.');
     }
 
-    // Menampilkan courses yang sudah diambil student
     public function myCourses()
     {
-        $userId = session('user_id');
-        if (!$userId) {
-            return redirect()->route('login')->with('error', 'Sesi login habis, silakan login lagi.');
-        }
-
-        $user = User::find($userId);
-        if (!$user || !$user->student) {
-            return redirect()->back()->with('error', 'Data mahasiswa tidak ditemukan.');
-        }
-
-        $studentId = $user->student->STUDENT_ID;
+        $studentId = $this->getStudentId();
 
         // Ambil courses lewat TAKES dengan eager load course
         $takes = Take::with('course')
                      ->where('STUDENT_ID', $studentId)
+                     ->orderBy('ENROLL_DATE', 'desc')
                      ->get();
 
         return view('student.courses.my', compact('takes'));
+    }
+
+    public function show($id)
+    {
+        $course = Course::findOrFail($id);
+        $studentId = $this->getStudentId();
+
+        // Ambil daftar course yang sudah diambil student (optional)
+        $userTakes = Take::where('STUDENT_ID', $studentId)
+                         ->pluck('COURSE_ID')
+                         ->toArray();
+
+        return view('student.courses.show', compact('course', 'userTakes'));
     }
 }
