@@ -17,7 +17,8 @@ class CourseController extends Controller
                 ->orWhere('COURSE_CODE', 'like', "%{$search}%");
         }
         
-        $courses = $query->orderBy('COURSE_NAME')->get();
+        $courses = $query->orderBy('COURSE_ID')->get();
+
         return view('admin.courses.dashboard', compact('courses'));
     }
 
