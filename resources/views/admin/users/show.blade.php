@@ -33,17 +33,14 @@
                         <h4 class="font-bold">{{ $take->course->COURSE_NAME }}</h4>
                         <p><strong>Code:</strong> {{ $take->course->COURSE_CODE }}</p>
                         <p><strong>Credits:</strong> {{ $take->course->CREDITS }}</p>
-                        <p><strong>Status:</strong> 
-                            <span class="{{ $user->STATUS == 'active' ? 'text-green-600' : 'text-red-600' }}">
-                                {{ ucfirst($user->STATUS) }}
-                            </span>
-                        </p>
+                        <p><strong>Status:</strong> {{ $take->STATUS }}</p>
                         @if($take->course->IMAGE)
                             <img src="{{ asset('storage/'.$take->course->IMAGE) }}" 
                                 class="w-full h-32 object-cover rounded-md mt-2">
                         @endif
                     </div>
                 @endforeach
+
             </div>
         @else
             <p class="text-gray-600">User belum mengambil course apapun.</p>
