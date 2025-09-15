@@ -9,9 +9,6 @@
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
-    <!-- Navbar -->
-
-
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-8 flex-1">
         <div class="bg-white shadow-lg rounded-xl p-6">
