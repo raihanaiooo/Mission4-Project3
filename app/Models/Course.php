@@ -34,7 +34,5 @@ class Course extends Model
             'STUDENT_ID'     
         );
     }
-
-
     
 }

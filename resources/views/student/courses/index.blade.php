@@ -5,7 +5,6 @@
 <h1 class="text-3xl font-bold mb-4">Student Dashboard</h1>
 <h2 class="text-2xl font-semibold mb-6">Daftar Courses</h2>
 
-{{-- Search Form --}}
 <form method="GET" action="{{ route('student.courses.index') }}" class="mb-6 flex">
     <input type="text" name="search" value="{{ request('search') }}"
            placeholder="Cari course..."

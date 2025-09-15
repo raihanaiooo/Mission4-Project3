@@ -5,7 +5,6 @@
 <div class="container mx-auto px-6 py-8">
     <h2 class="text-2xl font-semibold mb-6">Course Saya</h2>
 
-    {{-- Search Form --}}
     <form method="GET" action="{{ route('student.courses.my') }}" class="mb-6 flex">
         <input type="text" name="search" value="{{ request('search') }}"
                placeholder="Cari course..."

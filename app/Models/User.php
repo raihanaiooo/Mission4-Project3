@@ -21,7 +21,10 @@ class User extends Authenticatable
         'ROLE',
         'FULL_NAME',
         'PROFILE_IMAGE',
+        'STUDENT_NUMBER',  
+        'ENTRY_YEAR',      
     ];
+
 
     protected $hidden = [
         'PASSWORD',
@@ -54,11 +57,13 @@ class User extends Authenticatable
         return $this->ROLE === 'admin';
     }
 
+    // Relasi ke student
     public function student()
     {
         return $this->hasOne(Student::class, 'USER_ID', 'USER_ID');
     }
 
+    // Relasi ke takes via student
     public function takes()
     {
         return $this->hasManyThrough(

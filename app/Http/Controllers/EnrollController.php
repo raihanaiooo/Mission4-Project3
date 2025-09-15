@@ -9,6 +9,7 @@ use App\Models\User;
 
 class EnrollController extends Controller
 {
+    // Ambil id student
     private function getStudentId()
     {
         $userId = session('user_id');
@@ -24,6 +25,7 @@ class EnrollController extends Controller
         return $user->student->STUDENT_ID;
     }
 
+    // READ
     public function index(Request $request)
     {
         $studentId = $this->getStudentId();
@@ -48,6 +50,7 @@ class EnrollController extends Controller
         return view('student.courses.index', compact('courses', 'userTakes'));
     }
 
+    // Enroll
     public function enroll($id)
     {
         $studentId = $this->getStudentId();
@@ -82,6 +85,7 @@ class EnrollController extends Controller
         return redirect()->back()->with('success', 'Berhasil enroll ke course.');
     }
 
+    // Enrolled Course
     public function myCourses(Request $request)
     {
         $studentId = $this->getStudentId();

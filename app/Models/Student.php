@@ -18,7 +18,6 @@ class Student extends Model
         'ENTRY_YEAR',
     ];
 
-
     // Relasi ke User
     public function user()
     {
@@ -41,6 +40,5 @@ class Student extends Model
             'COURSE_ID'    
         )->withPivot('STATUS', 'GRADE', 'ENROLL_DATE');
     }
-
     
 }

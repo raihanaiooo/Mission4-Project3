@@ -19,7 +19,7 @@ class AdminUserController extends Controller
                 ->orWhere('ROLE', 'like', "%{$search}%");
         }
 
-        $users = $query->orderBy('FULL_NAME')->get();
+        $users = $query->orderBy('USER_ID')->get();
 
         return view('admin.users.index', compact('users'));
     }

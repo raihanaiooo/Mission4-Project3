@@ -36,7 +36,7 @@
         <table class="w-full text-left border-collapse">
             <thead class="bg-gray-200 text-gray-700">
                 <tr>
-                    <th class="px-4 py-2">ID</th>
+                    <th class="px-4 py-2">No</th>
                     <th class="px-4 py-2">Username</th>
                     <th class="px-4 py-2">Full Name</th>
                     <th class="px-4 py-2">Role</th>
@@ -47,23 +47,23 @@
             <tbody class="divide-y divide-gray-200">
                 @foreach($users as $user)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-2">{{ $user->USER_ID }}</td>
+                        <td class="px-4 py-2">{{ $loop->iteration }}</td>
                         <td class="px-4 py-2">{{ $user->USERNAME }}</td>
                         <td class="px-4 py-2">{{ $user->FULL_NAME }}</td>
                         <td class="px-4 py-2">{{ $user->ROLE }}</td>
                         <td class="px-4 py-2">
                             @if($user->PROFILE_IMAGE)
                                 <img src="{{ asset('storage/'.$user->PROFILE_IMAGE) }}" 
-                                     class="w-16 h-16 object-cover rounded-md">
+                                    class="w-16 h-16 object-cover rounded-md">
                             @endif
                         </td>
                         <td class="px-4 py-2 space-x-2">
                             <a href="{{ route('admin.users.show', $user->USER_ID) }}" 
-                               class="text-blue-600 hover:underline">Detail</a>
+                            class="text-blue-600 hover:underline">Detail</a>
                             <a href="{{ route('admin.users.edit', $user->USER_ID) }}" 
-                               class="text-yellow-600 hover:underline">Edit</a>
+                            class="text-yellow-600 hover:underline">Edit</a>
                             <form action="{{ route('admin.users.destroy', $user->USER_ID) }}" 
-                                  method="POST" class="inline">
+                                method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
@@ -77,6 +77,7 @@
                 @endforeach
             </tbody>
         </table>
+
     </div>
 </div>
 @endsection
