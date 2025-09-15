@@ -1,9 +1,20 @@
 @extends('layouts.app')
-
 @include('layouts.navbar-student')
+
 @section('content')
-<h1 class="text-3xl font-bold mb-8">Student Dashboard</h1>
+<h1 class="text-3xl font-bold mb-4">Student Dashboard</h1>
 <h2 class="text-2xl font-semibold mb-6">Daftar Courses</h2>
+
+{{-- Search Form --}}
+<form method="GET" action="{{ route('student.courses.index') }}" class="mb-6 flex">
+    <input type="text" name="search" value="{{ request('search') }}"
+           placeholder="Cari course..."
+           class="flex-1 px-4 py-2 rounded-l-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <button type="submit"
+           class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 transition">
+        Cari
+    </button>
+</form>
 
 @if($courses->count() > 0)
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
@@ -16,7 +27,6 @@
                 </div>
 
                 <div class="mt-auto space-y-2">
-                    <!-- Enroll Button -->
                     <form action="{{ route('student.courses.enroll', ['id' => $course->COURSE_ID]) }}" method="POST">
                         @csrf
                         <button type="submit"
@@ -27,7 +37,6 @@
                         </button>
                     </form>
 
-                    <!-- Detail Button -->
                     <a href="{{ route('student.courses.show', ['id' => $course->COURSE_ID]) }}"
                        class="block text-center bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-md w-full">
                         Lihat Detail

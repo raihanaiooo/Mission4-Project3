@@ -24,12 +24,21 @@ class EnrollController extends Controller
         return $user->student->STUDENT_ID;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $studentId = $this->getStudentId();
 
+        $query = Course::query();
         // Ambil semua courses
         $courses = Course::all();
+        
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('COURSE_NAME', 'like', "%{$search}%")
+                 ->orWhere('COURSE_CODE', 'like', "%{$search}%");
+        }
+
+        $courses = $query->get();
 
         // Ambil semua course yang sudah diambil student ini
         $userTakes = Take::where('STUDENT_ID', $studentId)
