@@ -25,5 +25,16 @@ class Course extends Model
         return $this->hasMany(Take::class, 'COURSE_ID', 'COURSE_ID');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'TAKES',
+            'COURSE_ID',     // foreign key di pivot untuk Course
+            'STUDENT_ID'     // foreign key di pivot untuk User
+        );
+    }
+
+
     
 }

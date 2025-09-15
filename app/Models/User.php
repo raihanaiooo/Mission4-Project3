@@ -54,10 +54,27 @@ class User extends Authenticatable
         return $this->ROLE === 'admin';
     }
 
-    // Relasi ke Student
     public function student()
     {
         return $this->hasOne(Student::class, 'USER_ID', 'USER_ID');
+    }
+
+    public function takes()
+    {
+        return $this->hasManyThrough(
+            Take::class,
+            Student::class,
+            'USER_ID',      // FK di STUDENTS ke USERS
+            'STUDENT_ID',   // FK di TAKES ke STUDENTS
+            'USER_ID',      // PK di USERS
+            'STUDENT_ID'    // PK di STUDENTS
+        );
+    }
+
+    // Courses lewat student
+    public function courses()
+    {
+        return $this->takes()->with('course');
     }
 
 }

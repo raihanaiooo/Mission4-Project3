@@ -43,8 +43,11 @@ class AdminUserController extends Controller
     // SHOW
     public function show(User $user)
     {
+        $user->load('student.takes.course'); // eager load
         return view('admin.users.show', compact('user'));
     }
+
+
 
     // EDIT
     public function edit(User $user)

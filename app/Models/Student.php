@@ -31,5 +31,16 @@ class Student extends Model
         return $this->hasMany(Take::class, 'STUDENT_ID', 'STUDENT_ID');
     }
 
+    // Ambil courses yang diambil student
+    public function courses()
+    {
+        return $this->belongsToMany(
+            Course::class,
+            'TAKES',       // pivot table
+            'STUDENT_ID',  // foreign key di pivot untuk Student
+            'COURSE_ID'    // foreign key di pivot untuk Course
+        )->withPivot('STATUS', 'GRADE', 'ENROLL_DATE');
+    }
+
     
 }
