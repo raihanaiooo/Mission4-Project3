@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@include('layouts.navbar-student')
 
+@include('layouts.navbar-student')
 @section('content')
 <h1 class="text-3xl font-bold mb-8">Student Dashboard</h1>
 <h2 class="text-2xl font-semibold mb-6">Daftar Courses</h2>

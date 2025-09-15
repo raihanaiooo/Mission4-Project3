@@ -6,12 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+<body class=" text-gray-800 min-h-screen flex flex-col">
 
     <!-- Main Content -->
-    <main class="container mx-auto px-6 py-8 flex-1">
-        @yield('content')
+    <main class="flex-1">
+        <div class="container mx-auto px-6 py-8">
+            @yield('content')
+        </div>
     </main>
+
 
 
     <!-- Footer -->
