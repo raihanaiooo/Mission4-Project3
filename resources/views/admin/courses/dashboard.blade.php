@@ -79,19 +79,31 @@
 fetch("{{ route('admin.courses.json') }}")
   .then(res => res.json())
   .then(data => {
-    // JSON dikembalikan dengan key 'courses'
-    let courses = data.courses;
+    const courses = data.courses;
 
-    console.log("Array of objects courses:", courses);
+    // Ambil container
+    const container = document.getElementById('json-courses');
 
-    let output = "<h3 class='text-xl font-semibold mb-2'>Courses Preview (from JSON)</h3><ul class='list-disc pl-6'>";
+    // Tambahkan judul
+    const h3 = document.createElement('h3');
+    h3.textContent = "Courses Preview (from JSON)";
+    h3.classList.add('text-xl', 'font-semibold', 'mb-2');
+    container.appendChild(h3);
+
+    // Buat <ul> baru
+    const ul = document.createElement('ul');
+    ul.classList.add('list-disc', 'pl-6');
+
     courses.forEach(course => {
-        output += `<li>${course.COURSE_NAME} (${course.COURSE_CODE}) - Credits: ${course.CREDITS}</li>`;
+        const li = document.createElement('li');
+        li.textContent = `${course.COURSE_NAME} (${course.COURSE_CODE}) - Credits: ${course.CREDITS}`;
+        ul.appendChild(li);
     });
-    output += "</ul>";
 
-    document.getElementById('json-courses').innerHTML = output;
+    // Masukkan <ul> ke container
+    container.appendChild(ul);
   })
   .catch(err => console.error(err));
+
 </script>
 @endsection

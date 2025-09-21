@@ -56,29 +56,41 @@
 fetch("{{ route('student.courses.json') }}")
     .then(res => res.json())
     .then(data => {
-        // Simpan data mahasiswa & courses ke array of objects
         const student = data.student;
         const courses = data.courses;
         const enrolled = data.enrolled.map(e => e.COURSE_ID);
 
-        console.log("Mahasiswa:", student);
-        console.log("Daftar Courses:", courses);
-        console.log("Course yang sudah di-enroll:", enrolled);
+        // Ambil container
+        const container = document.getElementById('student-info');
 
-        // Tampilkan info mahasiswa + enrolled courses
-        let output = `<h3 class="text-xl font-semibold mb-2">${student.FULL_NAME} (${student.STUDENT_NUMBER})</h3>`;
-        output += "<h4 class='font-semibold'>Enrolled Courses:</h4><ul class='list-disc ml-6'>";
+        // Buat elemen judul mahasiswa
+        const h3 = document.createElement('h3');
+        h3.textContent = `${student.FULL_NAME} (${student.STUDENT_NUMBER})`;
+        h3.classList.add('text-xl', 'font-semibold', 'mb-2');
+        container.appendChild(h3);
+
+        // Buat elemen subjudul
+        const h4 = document.createElement('h4');
+        h4.textContent = 'Enrolled Courses:';
+        h4.classList.add('font-semibold');
+        container.appendChild(h4);
+
+        // Buat <ul> untuk daftar course
+        const ul = document.createElement('ul');
+        ul.classList.add('list-disc', 'ml-6');
 
         courses.forEach(course => {
             if (enrolled.includes(course.COURSE_ID)) {
-                output += `<li>${course.COURSE_NAME} (${course.COURSE_CODE})</li>`;
+                const li = document.createElement('li');
+                li.textContent = `${course.COURSE_NAME} (${course.COURSE_CODE})`;
+                ul.appendChild(li);
             }
         });
 
-        output += "</ul>";
-
-        document.getElementById('student-info').innerHTML = output;
+        // Masukkan <ul> ke container
+        container.appendChild(ul);
     })
     .catch(err => console.error(err));
+
 </script>
 @endsection
