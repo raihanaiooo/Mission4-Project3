@@ -4,7 +4,6 @@
 @section('content')
 <div class="container mx-auto px-6 py-8">
 
-
     <h2 class="text-2xl font-bold mb-6">Manage Courses</h2>
 
     <!-- Tombol tambah course -->
@@ -40,7 +39,6 @@
                     <th class="px-4 py-2">Kode</th>
                     <th class="px-4 py-2">Nama</th>
                     <th class="px-4 py-2">Credits</th>
-                    <!-- <th class="px-4 py-2">Image</th> -->
                     <th class="px-4 py-2">Aksi</th>
                 </tr>
             </thead>
@@ -51,12 +49,6 @@
                         <td class="px-4 py-2">{{ $course->COURSE_CODE }}</td>
                         <td class="px-4 py-2">{{ $course->COURSE_NAME }}</td>
                         <td class="px-4 py-2">{{ $course->CREDITS }}</td>
-                        <!-- <td class="px-4 py-2">
-                            @if($course->IMAGE)
-                                <img src="{{ asset('storage/'.$course->IMAGE) }}" 
-                                     class="w-16 h-16 object-cover rounded-md">
-                            @endif
-                        </td> -->
                         <td class="px-4 py-2 space-x-2">
                             <a href="{{ route('admin.courses.show', $course->COURSE_ID) }}" 
                                class="text-blue-600 hover:underline">Detail</a>
@@ -76,7 +68,30 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
 
+        <!-- Div untuk JSON preview -->
+        <div id="json-courses" class="mt-8"></div>
+    </div>
 </div>
+
+<!-- Fetch JSON dan tampilkan -->
+<script>
+fetch("{{ route('admin.courses.json') }}")
+  .then(res => res.json())
+  .then(data => {
+    // JSON dikembalikan dengan key 'courses'
+    let courses = data.courses;
+
+    console.log("Array of objects courses:", courses);
+
+    let output = "<h3 class='text-xl font-semibold mb-2'>Courses Preview (from JSON)</h3><ul class='list-disc pl-6'>";
+    courses.forEach(course => {
+        output += `<li>${course.COURSE_NAME} (${course.COURSE_CODE}) - Credits: ${course.CREDITS}</li>`;
+    });
+    output += "</ul>";
+
+    document.getElementById('json-courses').innerHTML = output;
+  })
+  .catch(err => console.error(err));
+</script>
 @endsection

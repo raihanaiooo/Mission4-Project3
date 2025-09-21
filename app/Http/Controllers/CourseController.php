@@ -100,4 +100,25 @@ class CourseController extends Controller
         $course->delete();
         return redirect()->route('admin.courses.dashboard')->with('success', 'Course deleted successfully!');
     }
+
+    // JSON
+public function getDataJson(){
+    $courses = Course::all();
+
+    $courseData = $courses->map(function ($course) {
+        return [
+            'COURSE_ID' => $course->COURSE_ID,
+            'COURSE_CODE' => $course->COURSE_CODE,
+            'COURSE_NAME' => $course->COURSE_NAME,
+            'DESCRIPTION' => $course->DESCRIPTION,
+            'CREDITS' => $course->CREDITS,
+            'IMAGE' => $course->IMAGE,
+        ];
+    });
+
+    return response()->json([
+        'courses' => $courseData
+    ]);
+}
+
 }

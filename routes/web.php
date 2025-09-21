@@ -20,6 +20,7 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
     // Dashboard
     Route::get('/admin/courses/dashboard', [CourseController::class, 'dashboard'])->name('admin.courses.dashboard');
 
+    Route::get('/admin/courses/json', [CourseController::class, 'getDataJson'])->name('admin.courses.json');
     // CRUD Courses
     Route::resource('/admin/courses', CourseController::class)->names([
         'index'   => 'admin.courses.index',
