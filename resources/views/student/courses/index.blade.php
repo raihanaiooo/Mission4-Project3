@@ -5,92 +5,88 @@
 <h1 class="text-3xl font-bold mb-4">Student Dashboard</h1>
 <h2 class="text-2xl font-semibold mb-6">Daftar Courses</h2>
 
-<form method="GET" action="{{ route('student.courses.index') }}" class="mb-6 flex">
-    <input type="text" name="search" value="{{ request('search') }}"
-           placeholder="Cari course..."
-           class="flex-1 px-4 py-2 rounded-l-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-    <button type="submit"
-           class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 transition">
-        Cari
+<!-- Info mahasiswa -->
+<div id="student-info" class="mb-6 p-4 bg-gray-100 rounded-md"></div>
+
+<!-- Form pemilihan course -->
+<form id="enroll-form" method="POST" action="{{ route('student.courses.bulkEnroll') }}">
+    @csrf
+    <div id="course-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full mb-4">
+    </div>
+
+    <p>Total SKS: <span id="total-credits">0</span></p>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+        Submit
     </button>
 </form>
 
-<!-- Info mahasiswa dari JS -->
-<div id="student-info" class="mb-6 p-4 bg-gray-100 rounded-md"></div>
-
-@if($courses->count() > 0)
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
-        @foreach($courses as $course)
-            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 p-4 aspect-square flex flex-col justify-between">
-                <div>
-                    <h3 class="text-lg font-bold mb-2">{{ $course->COURSE_NAME }}</h3>
-                    <p class="text-gray-600 mb-1"><strong>Kode:</strong> {{ $course->COURSE_CODE }}</p>
-                    <p class="text-gray-600 mb-3"><strong>Credits:</strong> {{ $course->CREDITS }}</p>
-                </div>
-
-                <div class="mt-auto space-y-2">
-                    <form action="{{ route('student.courses.enroll', ['id' => $course->COURSE_ID]) }}" method="POST">
-                        @csrf
-                        <button type="submit"
-                            class="{{ in_array($course->COURSE_ID, $userTakes) ? 'bg-red-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700' }} text-white px-3 py-2 rounded-md w-full"
-                            {{ in_array($course->COURSE_ID, $userTakes) ? 'disabled' : '' }}
-                        >
-                            {{ in_array($course->COURSE_ID, $userTakes) ? 'Enrolled' : 'Enroll' }}
-                        </button>
-                    </form>
-
-                    <a href="{{ route('student.courses.show', ['id' => $course->COURSE_ID]) }}"
-                       class="block text-center bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-md w-full">
-                        Lihat Detail
-                    </a>
-                </div>
-            </div>
-        @endforeach
-    </div>
-@else
-    <p class="text-gray-600">Belum ada course tersedia.</p>
-@endif
-
-<!-- Script JS untuk fetch JSON dan simpan ke array of objects -->
 <script>
 fetch("{{ route('student.courses.json') }}")
-    .then(res => res.json())
-    .then(data => {
-        const student = data.student;
-        const courses = data.courses;
-        const enrolled = data.enrolled.map(e => e.COURSE_ID);
+.then(res => res.json())
+.then(data => {
+    const student = data.student;
+    const courses = data.courses;
+    const enrolled = data.enrolled;
 
-        // Ambil container
-        const container = document.getElementById('student-info');
+    // Tampilkan info mahasiswa
+    const container = document.getElementById('student-info');
+    const h3 = document.createElement('h3');
+    h3.textContent = `${student.FULL_NAME} (${student.STUDENT_NUMBER})`;
+    h3.classList.add('text-xl','font-semibold','mb-2');
+    container.appendChild(h3);
 
-        // Buat elemen judul mahasiswa
-        const h3 = document.createElement('h3');
-        h3.textContent = `${student.FULL_NAME} (${student.STUDENT_NUMBER})`;
-        h3.classList.add('text-xl', 'font-semibold', 'mb-2');
-        container.appendChild(h3);
+    const courseList = document.getElementById('course-list');
 
-        // Buat elemen subjudul
-        const h4 = document.createElement('h4');
-        h4.textContent = 'Enrolled Courses:';
-        h4.classList.add('font-semibold');
-        container.appendChild(h4);
+    courses.forEach(course => {
+        const div = document.createElement('div');
+        div.classList.add('bg-white','p-4','rounded-xl','shadow-md','flex','flex-col','justify-between');
 
-        // Buat <ul> untuk daftar course
-        const ul = document.createElement('ul');
-        ul.classList.add('list-disc', 'ml-6');
+        const label = document.createElement('label');
+        label.classList.add('flex','items-center','space-x-2');
 
-        courses.forEach(course => {
-            if (enrolled.includes(course.COURSE_ID)) {
-                const li = document.createElement('li');
-                li.textContent = `${course.COURSE_NAME} (${course.COURSE_CODE})`;
-                ul.appendChild(li);
-            }
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'courses[]';
+        checkbox.value = course.COURSE_ID;
+        checkbox.dataset.credits = course.CREDITS;
+
+        const span = document.createElement('span');
+        span.textContent = `${course.COURSE_NAME} (${course.COURSE_CODE}) - SKS: ${course.CREDITS}`;
+
+        // Jika sudah enrolled, disable checkbox & beri tanda
+        if(enrolled.includes(course.COURSE_ID)){
+            checkbox.disabled = true;
+            span.textContent += ' (Enrolled)';
+            span.classList.add('text-gray-400','italic');
+        }
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        div.appendChild(label);
+        courseList.appendChild(div);
+    });
+
+    // Update total SKS
+    const totalCreditsSpan = document.getElementById('total-credits');
+    courseList.addEventListener('change', () => {
+        let total = 0;
+        courseList.querySelectorAll('input[type=checkbox]:not(:disabled):checked').forEach(cb => {
+            total += parseInt(cb.dataset.credits);
         });
+        totalCreditsSpan.textContent = total;
+    });
 
-        // Masukkan <ul> ke container
-        container.appendChild(ul);
-    })
-    .catch(err => console.error(err));
-
+    // Validasi form sebelum submit
+    const form = document.getElementById('enroll-form');
+    form.addEventListener('submit', e => {
+        const checked = courseList.querySelectorAll('input[type=checkbox]:not(:disabled):checked');
+        if(checked.length === 0){
+            e.preventDefault();
+            alert('Pilih minimal 1 course!');
+        }
+    });
+})
+.catch(err => console.error(err));
 </script>
 @endsection

@@ -127,7 +127,7 @@ class EnrollController extends Controller
         $course = Course::findOrFail($id);
         $studentId = $this->getStudentId();
 
-        // Ambil daftar course yang sudah diambil student (optional)
+        // Ambil daftar course yang sudah diambil student
         $userTakes = Take::where('STUDENT_ID', $studentId)
                          ->pluck('COURSE_ID')
                          ->toArray();
@@ -135,35 +135,61 @@ class EnrollController extends Controller
         return view('student.courses.show', compact('course', 'userTakes'));
     }
 
-    public function getDataJson(){
-
-        $userId = session('user_id');
-        $user = User::with('student')->find($userId);
-//         dd([
-//     'userIdSession' => $userId,
-//     'userRole' => $user->ROLE,
-//     'hasStudentRelation' => $user->student !== null,
-//     'studentId' => $user->student?->STUDENT_ID
-// ]);
+    public function getDataJson() {
+    $userId = session('user_id');
+    $user = User::with('student')->find($userId);
 
     if (!$user || $user->ROLE != 'student' || !$user->student) {
         abort(403, 'Data mahasiswa tidak ditemukan atau bukan mahasiswa.');
     }
 
-        $studentData = array_merge(
-            $user->student->toArray(),
-            ['FULL_NAME' => $user->FULL_NAME]
-        );
-        $courses = Course::all();
+    $studentData = array_merge(
+        $user->student->toArray(),
+        ['FULL_NAME' => $user->FULL_NAME]
+    );
 
-        $enrolled = Take::with('course')
-                    ->where('STUDENT_ID', $studentData['STUDENT_ID'])
-                    ->get();
+    $courses = Course::all();
 
-        return response()->json([
-            'student' => $studentData,
-            'courses' => $courses,
-            'enrolled' => $enrolled
+    // Ambil hanya COURSE_ID yang sudah diambil
+    $enrolled = Take::where('STUDENT_ID', $studentData['STUDENT_ID'])
+                    ->pluck('COURSE_ID')
+                    ->toArray(); 
+
+    return response()->json([
+        'student' => $studentData,
+        'courses' => $courses,
+        'enrolled' => $enrolled
+    ]);
+}
+
+
+
+    public function bulkEnroll(Request $request)
+    {
+        $request->validate([
+            'courses' => 'required|array|min:1',
+            'courses.*' => 'exists:COURSES,COURSE_ID',
         ]);
+
+        $studentId = $this->getStudentId();
+
+        foreach($request->courses as $courseId){
+            $exists = Take::where('STUDENT_ID', $studentId)
+                          ->where('COURSE_ID', $courseId)
+                          ->exists();
+
+            if (!$exists){
+                Take::create([
+                    'STUDENT_ID' => $studentId,
+                    'COURSE_ID'  => $courseId,
+                    'ENROLL_DATE'=> now(),
+                    'STATUS'     => 'active',
+                    'GRADE'      => 0.00
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Course berhasil di-enroll!');
     }
+
 }
