@@ -150,15 +150,18 @@ class EnrollController extends Controller
         abort(403, 'Data mahasiswa tidak ditemukan atau bukan mahasiswa.');
     }
 
-        $student = $user->student;
+        $studentData = array_merge(
+            $user->student->toArray(),
+            ['FULL_NAME' => $user->FULL_NAME]
+        );
         $courses = Course::all();
 
         $enrolled = Take::with('course')
-                    ->where('STUDENT_ID', $student->STUDENT_ID)
+                    ->where('STUDENT_ID', $studentData['STUDENT_ID'])
                     ->get();
 
         return response()->json([
-            'student' => $student,
+            'student' => $studentData,
             'courses' => $courses,
             'enrolled' => $enrolled
         ]);

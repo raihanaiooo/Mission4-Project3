@@ -15,6 +15,9 @@
     </button>
 </form>
 
+<!-- Info mahasiswa dari JS -->
+<div id="student-info" class="mb-6 p-4 bg-gray-100 rounded-md"></div>
+
 @if($courses->count() > 0)
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
         @foreach($courses as $course)
@@ -35,35 +38,6 @@
                             {{ in_array($course->COURSE_ID, $userTakes) ? 'Enrolled' : 'Enroll' }}
                         </button>
                     </form>
-<script>
-    // Ambil data JSON dari Laravel
-    fetch("{{ route('student.courses.json') }}")
-        .then(res => res.json())
-        .then(data => {
-            // simpan ke array of objects JS
-            let student = data.student;
-            let courses = data.courses;
-            let enrolled = data.enrolled.map(e => e.COURSE_ID);
-
-            console.log("Mahasiswa:", student);
-            console.log("Daftar Courses:", courses);
-            console.log("Course yang sudah di-enroll:", enrolled);
-
-            // Contoh: tampilkan di halaman tambahan
-            let output = `<h3>${student.user.name} (${student.STUDENT_NUMBER})</h3>`;
-            output += "<h4>Enrolled Courses:</h4><ul>";
-
-            courses.forEach(course => {
-                if (enrolled.includes(course.COURSE_ID)) {
-                    output += `<li>${course.COURSE_NAME} (${course.COURSE_CODE})</li>`;
-                }
-            });
-
-            output += "</ul>";
-            document.body.insertAdjacentHTML("beforeend", output);
-        })
-        .catch(err => console.error(err));
-</script>
 
                     <a href="{{ route('student.courses.show', ['id' => $course->COURSE_ID]) }}"
                        class="block text-center bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-md w-full">
@@ -76,4 +50,35 @@
 @else
     <p class="text-gray-600">Belum ada course tersedia.</p>
 @endif
+
+<!-- Script JS untuk fetch JSON dan simpan ke array of objects -->
+<script>
+fetch("{{ route('student.courses.json') }}")
+    .then(res => res.json())
+    .then(data => {
+        // Simpan data mahasiswa & courses ke array of objects
+        const student = data.student;
+        const courses = data.courses;
+        const enrolled = data.enrolled.map(e => e.COURSE_ID);
+
+        console.log("Mahasiswa:", student);
+        console.log("Daftar Courses:", courses);
+        console.log("Course yang sudah di-enroll:", enrolled);
+
+        // Tampilkan info mahasiswa + enrolled courses
+        let output = `<h3 class="text-xl font-semibold mb-2">${student.FULL_NAME} (${student.STUDENT_NUMBER})</h3>`;
+        output += "<h4 class='font-semibold'>Enrolled Courses:</h4><ul class='list-disc ml-6'>";
+
+        courses.forEach(course => {
+            if (enrolled.includes(course.COURSE_ID)) {
+                output += `<li>${course.COURSE_NAME} (${course.COURSE_CODE})</li>`;
+            }
+        });
+
+        output += "</ul>";
+
+        document.getElementById('student-info').innerHTML = output;
+    })
+    .catch(err => console.error(err));
+</script>
 @endsection
