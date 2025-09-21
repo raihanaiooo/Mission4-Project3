@@ -54,7 +54,8 @@ Route::middleware(['auth.session', 'role:student'])
         Route::get('/courses', [EnrollController::class, 'index'])->name('courses.index');
         Route::post('/courses/{id}/enroll', [EnrollController::class, 'enroll'])->name('courses.enroll');
         Route::get('/my-courses', [EnrollController::class, 'myCourses'])->name('courses.my');
-        Route::get('/courses/{id}', [EnrollController::class, 'show'])->name('courses.show'); // <-- ini penting
+        Route::get('/courses/{id}', [EnrollController::class, 'show'])->name('courses.show');
+        Route::get('/data/json', [EnrollController::class, 'getDataJson'])->name('courses.json');
     });
 
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Take;
 use App\Models\User;
+use App\Models\Student;
 
 class EnrollController extends Controller
 {
@@ -17,9 +18,21 @@ class EnrollController extends Controller
             abort(403, 'Sesi login habis, silakan login lagi.');
         }
 
-        $user = User::find($userId);
-        if (!$user || !$user->student) {
-            abort(403, 'Data mahasiswa untuk akun ini belum tersedia.');
+        $user = User::with('student')->find($userId);
+        if(!$user){
+            abort(403, 'User tidak ditemukan');
+        }
+
+        if($user->ROLE !='student'){
+            abort(403, 'Akun bukan mahasiswa');
+        }
+
+        if(!$user->student){
+            $student = Student::where('USER_ID', $userId)->first();
+            if(!$student){
+                abort(403, 'student record tidak ditemukan untuk USER_ID $userId');
+            }
+            return $student->STUDENT_ID;
         }
 
         return $user->student->STUDENT_ID;
@@ -120,5 +133,34 @@ class EnrollController extends Controller
                          ->toArray();
 
         return view('student.courses.show', compact('course', 'userTakes'));
+    }
+
+    public function getDataJson(){
+
+        $userId = session('user_id');
+        $user = User::with('student')->find($userId);
+//         dd([
+//     'userIdSession' => $userId,
+//     'userRole' => $user->ROLE,
+//     'hasStudentRelation' => $user->student !== null,
+//     'studentId' => $user->student?->STUDENT_ID
+// ]);
+
+    if (!$user || $user->ROLE != 'student' || !$user->student) {
+        abort(403, 'Data mahasiswa tidak ditemukan atau bukan mahasiswa.');
+    }
+
+        $student = $user->student;
+        $courses = Course::all();
+
+        $enrolled = Take::with('course')
+                    ->where('STUDENT_ID', $student->STUDENT_ID)
+                    ->get();
+
+        return response()->json([
+            'student' => $student,
+            'courses' => $courses,
+            'enrolled' => $enrolled
+        ]);
     }
 }

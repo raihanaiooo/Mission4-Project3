@@ -35,6 +35,35 @@
                             {{ in_array($course->COURSE_ID, $userTakes) ? 'Enrolled' : 'Enroll' }}
                         </button>
                     </form>
+<script>
+    // Ambil data JSON dari Laravel
+    fetch("{{ route('student.courses.json') }}")
+        .then(res => res.json())
+        .then(data => {
+            // simpan ke array of objects JS
+            let student = data.student;
+            let courses = data.courses;
+            let enrolled = data.enrolled.map(e => e.COURSE_ID);
+
+            console.log("Mahasiswa:", student);
+            console.log("Daftar Courses:", courses);
+            console.log("Course yang sudah di-enroll:", enrolled);
+
+            // Contoh: tampilkan di halaman tambahan
+            let output = `<h3>${student.user.name} (${student.STUDENT_NUMBER})</h3>`;
+            output += "<h4>Enrolled Courses:</h4><ul>";
+
+            courses.forEach(course => {
+                if (enrolled.includes(course.COURSE_ID)) {
+                    output += `<li>${course.COURSE_NAME} (${course.COURSE_CODE})</li>`;
+                }
+            });
+
+            output += "</ul>";
+            document.body.insertAdjacentHTML("beforeend", output);
+        })
+        .catch(err => console.error(err));
+</script>
 
                     <a href="{{ route('student.courses.show', ['id' => $course->COURSE_ID]) }}"
                        class="block text-center bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-md w-full">
