@@ -84,3 +84,54 @@
     </form>
 </div>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        let valid = true;
+
+        const courseCode = document.getElementById('course_code');
+        const courseName = document.getElementById('course_name');
+        const credits = document.getElementById('credits');
+
+        // Hapus error lama
+        document.querySelectorAll('small.js-error').forEach(el => el.remove());
+
+        // Reset border
+        [courseCode, courseName, credits].forEach(el => el.style.borderColor = '#d1d5db'); // gray-300
+
+        // ===== Course Code =====
+        if (!courseCode.value.trim()) {
+            valid = false;
+            courseCode.style.borderColor = '#dc2626';
+            courseCode.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Course code is required</small>');
+        } else if (courseCode.value.length > 20) {
+            valid = false;
+            courseCode.style.borderColor = '#dc2626';
+            courseCode.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Course code cannot exceed 20 characters</small>');
+        }
+
+        // ===== Course Name =====
+        if (!courseName.value.trim()) {
+            valid = false;
+            courseName.style.borderColor = '#dc2626';
+            courseName.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Course name is required</small>');
+        }
+
+        // ===== Credits =====
+        const creditsValue = parseFloat(credits.value);
+        if (!credits.value || isNaN(creditsValue) || creditsValue <= 0) {
+            valid = false;
+            credits.style.borderColor = '#dc2626';
+            credits.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Credits must be a positive number</small>');
+        } else if (creditsValue > 6.00) {
+            valid = false;
+            credits.style.borderColor = '#dc2626';
+            credits.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Credits cannot exceed 4.00</small>');
+        }
+
+        if (!valid) e.preventDefault();
+    });
+});
+</script>
