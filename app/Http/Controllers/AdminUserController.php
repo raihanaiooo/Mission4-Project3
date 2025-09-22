@@ -55,17 +55,33 @@ class AdminUserController extends Controller
             'PROFILE_IMAGE' => 'nullable|image|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['PASSWORD'] = bcrypt($request->PASSWORD);
-
+        // Upload profile image
+        $profileImagePath = null;
         if ($request->hasFile('PROFILE_IMAGE')) {
-            $data['PROFILE_IMAGE'] = $request->file('PROFILE_IMAGE')->store('profiles', 'public');
+            $profileImagePath = $request->file('PROFILE_IMAGE')->store('profiles', 'public');
         }
 
-        User::create($data);
+        // Create user
+        $user = User::create([
+            'USERNAME' => $request->USERNAME,
+            'FULL_NAME' => $request->FULL_NAME,
+            'ROLE' => $request->ROLE,
+            'PASSWORD' => $request->PASSWORD,
+            'PROFILE_IMAGE' => $profileImagePath,
+        ]);
+
+        // Jika role student, buat entry di table STUDENTS
+        if ($request->ROLE === 'student') {
+            $user->student()->create([
+                'STUDENT_NUMBER' => $request->STUDENT_NUMBER,
+                'ENTRY_YEAR' => $request->ENTRY_YEAR,
+                'PROFILE_IMAGE' => $profileImagePath,
+            ]);
+        }
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully!');
     }
+
 
     // SHOW
     public function show(User $user)

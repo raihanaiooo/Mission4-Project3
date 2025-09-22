@@ -3,7 +3,6 @@
 
 @section('content')
 <div class="container mx-auto px-6 py-8">
-    {{-- Navbar khusus admin --}}
 
     <h2 class="text-2xl font-bold mb-6">Manage Users</h2>
 
@@ -45,25 +44,25 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @foreach($users as $user)
+                @foreach($usersJson as $index => $user)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                        <td class="px-4 py-2">{{ $user->USERNAME }}</td>
-                        <td class="px-4 py-2">{{ $user->FULL_NAME }}</td>
-                        <td class="px-4 py-2">{{ $user->ROLE }}</td>
+                        <td class="px-4 py-2">{{ $index + 1 }}</td>
+                        <td class="px-4 py-2">{{ $user['USERNAME'] }}</td>
+                        <td class="px-4 py-2">{{ $user['FULL_NAME'] }}</td>
+                        <td class="px-4 py-2">{{ $user['ROLE'] }}</td>
                         <td class="px-4 py-2">
-                            @if($user->PROFILE_IMAGE)
-                                <img src="{{ asset('storage/'.$user->PROFILE_IMAGE) }}" 
-                                    class="w-16 h-16 object-cover rounded-md">
+                            @if($user['PROFILE_IMAGE'])
+                                <img src="{{ asset('storage/'.$user['PROFILE_IMAGE']) }}" 
+                                     class="w-16 h-16 object-cover rounded-md">
                             @endif
                         </td>
                         <td class="px-4 py-2 space-x-2">
-                            <a href="{{ route('admin.users.show', $user->USER_ID) }}" 
-                            class="text-blue-600 hover:underline">Detail</a>
-                            <a href="{{ route('admin.users.edit', $user->USER_ID) }}" 
-                            class="text-yellow-600 hover:underline">Edit</a>
-                            <form action="{{ route('admin.users.destroy', $user->USER_ID) }}" 
-                                method="POST" class="inline">
+                            <a href="{{ route('admin.users.show', $user['USER_ID']) }}" 
+                               class="text-blue-600 hover:underline">Detail</a>
+                            <a href="{{ route('admin.users.edit', $user['USER_ID']) }}" 
+                               class="text-yellow-600 hover:underline">Edit</a>
+                            <form action="{{ route('admin.users.destroy', $user['USER_ID']) }}" 
+                                  method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
@@ -77,7 +76,7 @@
                 @endforeach
             </tbody>
         </table>
-
     </div>
+
 </div>
 @endsection
