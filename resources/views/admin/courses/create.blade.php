@@ -6,7 +6,6 @@
 
 <form id="course-form" action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
 
-
         @csrf
 
         <!-- Course Code -->

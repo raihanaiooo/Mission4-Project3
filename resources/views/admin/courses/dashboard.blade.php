@@ -43,18 +43,18 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @foreach($courses as $course)
+                @foreach($coursesJson as $index => $course)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                        <td class="px-4 py-2">{{ $course->COURSE_CODE }}</td>
-                        <td class="px-4 py-2">{{ $course->COURSE_NAME }}</td>
-                        <td class="px-4 py-2">{{ $course->CREDITS }}</td>
+                        <td class="px-4 py-2">{{ $index + 1 }}</td>
+                        <td class="px-4 py-2">{{ $course['COURSE_CODE'] }}</td>
+                        <td class="px-4 py-2">{{ $course['COURSE_NAME'] }}</td>
+                        <td class="px-4 py-2">{{ $course['CREDITS'] }}</td>
                         <td class="px-4 py-2 space-x-2">
-                            <a href="{{ route('admin.courses.show', $course->COURSE_ID) }}" 
+                            <a href="{{ route('admin.courses.show', $course['COURSE_ID']) }}" 
                                class="text-blue-600 hover:underline">Detail</a>
-                            <a href="{{ route('admin.courses.edit', $course->COURSE_ID) }}" 
+                            <a href="{{ route('admin.courses.edit', $course['COURSE_ID']) }}" 
                                class="text-yellow-600 hover:underline">Edit</a>
-                            <form action="{{ route('admin.courses.destroy', $course->COURSE_ID) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.courses.destroy', $course['COURSE_ID']) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
@@ -68,42 +68,7 @@
                 @endforeach
             </tbody>
         </table>
-
-        <!-- Div untuk JSON preview -->
-        <div id="json-courses" class="mt-8"></div>
     </div>
+
 </div>
-
-<!-- Fetch JSON dan tampilkan -->
-<script>
-fetch("{{ route('admin.courses.json') }}")
-  .then(res => res.json())
-  .then(data => {
-    const courses = data.courses;
-
-    // Ambil container
-    const container = document.getElementById('json-courses');
-
-    // Tambahkan judul
-    const h3 = document.createElement('h3');
-    h3.textContent = "Courses Preview (from JSON)";
-    h3.classList.add('text-xl', 'font-semibold', 'mb-2');
-    container.appendChild(h3);
-
-    // Buat <ul> baru
-    const ul = document.createElement('ul');
-    ul.classList.add('list-disc', 'pl-6');
-
-    courses.forEach(course => {
-        const li = document.createElement('li');
-        li.textContent = `${course.COURSE_NAME} (${course.COURSE_CODE}) - Credits: ${course.CREDITS}`;
-        ul.appendChild(li);
-    });
-
-    // Masukkan <ul> ke container
-    container.appendChild(ul);
-  })
-  .catch(err => console.error(err));
-
-</script>
 @endsection
