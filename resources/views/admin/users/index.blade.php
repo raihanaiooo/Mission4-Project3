@@ -6,6 +6,11 @@
 
     <h2 class="text-2xl font-bold mb-6">Manage Users</h2>
 
+    <!-- Notification -->
+    <div id="notification" class="p-4 mb-4 bg-green-100 text-green-800 rounded-lg hidden">
+        Data berhasil dimuat!
+    </div>
+    
     <!-- Tombol tambah user -->
     <a href="{{ route('admin.users.create') }}" 
        class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition mb-4">
@@ -101,4 +106,17 @@
             });
         });
     });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    const notif = document.getElementById('notification');
+
+    // tunggu 2 detik sebelum tampil
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    notif.classList.remove('hidden');
+
+    // tampil selama 3 detik
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    notif.classList.add('hidden');
+});
 </script>

@@ -9,9 +9,9 @@
         </div>
 
         <div class="flex items-center space-x-4">
-            <nav class="space-x-4">
-                <a href="{{ route('student.courses.index') }}" class="hover:text-gray-200 transition">Courses</a>
-                <a href="{{ route('student.courses.my') }}" class="hover:text-gray-200 transition">My Courses</a>
+            <nav class="space-x-2">
+                <a href="{{ route('student.courses.index') }}" class="nav-link hover:bg-gray-700 rounded-lg px-3 py-1 transition">Courses</a>
+                <a href="{{ route('student.courses.my') }}" class="nav-link hover:bg-gray-700 rounded-lg px-3 py-1 transition">My Courses</a>
             </nav>
 
             <form action="{{ route('logout') }}" method="POST" class="inline">
@@ -23,3 +23,15 @@
         </div>
     </div>
 </header>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('font-bold');
+        }
+    });
+});
+</script>

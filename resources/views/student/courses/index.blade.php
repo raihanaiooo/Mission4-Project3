@@ -8,6 +8,11 @@
 <!-- Info mahasiswa -->
 <div id="student-info" class="mb-6 p-4 bg-gray-100 rounded-md"></div>
 
+<!-- Notification -->
+<div id="notification" class="p-4 mb-4 bg-green-100 text-green-800 rounded-lg hidden">
+    Data berhasil dimuat!
+</div>
+
 <!-- Form pemilihan course -->
 <form id="enroll-form" method="POST" action="{{ route('student.courses.bulkEnroll') }}">
     @csrf
@@ -90,3 +95,17 @@ fetch("{{ route('student.courses.json') }}")
 .catch(err => console.error(err));
 </script>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    const notif = document.getElementById('notification');
+
+    // tunggu 2 detik sebelum tampil
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    notif.classList.remove('hidden');
+
+    // tampil selama 3 detik
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    notif.classList.add('hidden');
+});
+</script>
