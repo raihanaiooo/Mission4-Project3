@@ -9,19 +9,32 @@ class AdminUserController extends Controller
 {
     // READ
     public function index(Request $request){
-
         $query = User::query();
         
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where('USERNAME', 'like', "%{$search}%")
                 ->orWhere('FULL_NAME', 'like', "%{$search}%")
-                ->orWhere('ROLE', 'like', "%{$search}%");
+                ->orWhere('ROLE', 'like', "%{$search}%")
+                ->orWhere('STUDENT_NUMBER', 'like', "%{$search}%")
+                ->orWhere('ENTRY_YEAR', 'like', "%{$search}%");
         }
 
         $users = $query->orderBy('USER_ID')->get();
 
-        return view('admin.users.index', compact('users'));
+        $usersJson = $users->map(function($user) {
+            return [
+                'USER_ID' => $user->USER_ID,
+                'USERNAME' => $user->USERNAME,
+                'FULL_NAME' => $user->FULL_NAME,
+                'STUDENT_NUMBER' => $user->STUDENT_NUMBER,
+                'ENTRY_YEAR' => $user->ENTRY_YEAR,
+                'ROLE' => $user->ROLE,
+                'PROFILE_IMAGE' => $user->PROFILE_IMAGE,
+            ];
+        });
+
+        return view('admin.users.index', compact('users', 'usersJson'));
     }
 
     // CREATE
@@ -35,12 +48,15 @@ class AdminUserController extends Controller
         $request->validate([
             'USERNAME' => 'required|string|max:50|unique:USERS,USERNAME',
             'FULL_NAME' => 'required|string|max:100',
+            'STUDENT_NUMBER' => 'nullable|string|max:20',
+            'ENTRY_YEAR' => 'nullable|integer|min:1900|max:' . date('Y'),
             'PASSWORD' => 'required|string|min:6|confirmed',
             'ROLE' => 'required|in:admin,student',
             'PROFILE_IMAGE' => 'nullable|image|max:2048',
         ]);
 
         $data = $request->all();
+        $data['PASSWORD'] = bcrypt($request->PASSWORD);
 
         if ($request->hasFile('PROFILE_IMAGE')) {
             $data['PROFILE_IMAGE'] = $request->file('PROFILE_IMAGE')->store('profiles', 'public');
@@ -70,6 +86,8 @@ class AdminUserController extends Controller
         $request->validate([
             'USERNAME' => 'required|string|max:50|unique:USERS,USERNAME,' . $user->USER_ID . ',USER_ID',
             'FULL_NAME' => 'required|string|max:100',
+            'STUDENT_NUMBER' => 'nullable|string|max:20',
+            'ENTRY_YEAR' => 'nullable|integer|min:1900|max:' . date('Y'),
             'PASSWORD' => 'nullable|string|min:6|confirmed',
             'ROLE' => 'required|in:admin,student',
             'PROFILE_IMAGE' => 'nullable|image|max:2048',
