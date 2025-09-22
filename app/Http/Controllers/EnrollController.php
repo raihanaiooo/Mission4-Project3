@@ -136,33 +136,31 @@ class EnrollController extends Controller
     }
 
     public function getDataJson() {
-    $userId = session('user_id');
-    $user = User::with('student')->find($userId);
+        $userId = session('user_id');
+        $user = User::with('student')->find($userId);
 
-    if (!$user || $user->ROLE != 'student' || !$user->student) {
-        abort(403, 'Data mahasiswa tidak ditemukan atau bukan mahasiswa.');
+        if (!$user || $user->ROLE != 'student' || !$user->student) {
+            abort(403, 'Data mahasiswa tidak ditemukan atau bukan mahasiswa.');
+        }
+
+        $studentData = array_merge(
+            $user->student->toArray(),
+            ['FULL_NAME' => $user->FULL_NAME]
+        );
+
+        $courses = Course::all();
+
+        // Ambil hanya COURSE_ID yang sudah diambil
+        $enrolled = Take::where('STUDENT_ID', $studentData['STUDENT_ID'])
+                        ->pluck('COURSE_ID')
+                        ->toArray(); 
+
+        return response()->json([
+            'student' => $studentData,
+            'courses' => $courses,
+            'enrolled' => $enrolled
+        ]);
     }
-
-    $studentData = array_merge(
-        $user->student->toArray(),
-        ['FULL_NAME' => $user->FULL_NAME]
-    );
-
-    $courses = Course::all();
-
-    // Ambil hanya COURSE_ID yang sudah diambil
-    $enrolled = Take::where('STUDENT_ID', $studentData['STUDENT_ID'])
-                    ->pluck('COURSE_ID')
-                    ->toArray(); 
-
-    return response()->json([
-        'student' => $studentData,
-        'courses' => $courses,
-        'enrolled' => $enrolled
-    ]);
-}
-
-
 
     public function bulkEnroll(Request $request)
     {

@@ -4,7 +4,9 @@
 <div class="max-w-2xl mx-auto">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Course</h2>
 
-    <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+<form id="course-form" action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
+
+
         @csrf
 
         <!-- Course Code -->
@@ -78,3 +80,55 @@
     </form>
 </div>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('course-form');
+    form.addEventListener('submit', function(e) {
+        let valid = true;
+
+        const courseCode = document.getElementById('course_code');
+        const courseName = document.getElementById('course_name');
+        const credits = document.getElementById('credits');
+
+        document.querySelectorAll('small.js-error').forEach(el => el.remove());
+
+        // Reset border
+        [courseCode, courseName, credits].forEach(el => {
+            el.style.borderColor = '#d1d5db'; // border-gray-300
+        });
+
+        // ===== Course Code =====
+        if (!courseCode.value.trim()) {
+            valid = false;
+            courseCode.style.borderColor = '#dc2626';
+            courseCode.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Course code is required</small>');
+        } else if (courseCode.value.length > 20) {
+            valid = false;
+            courseCode.style.borderColor = '#dc2626';
+            courseCode.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Course code cannot exceed 20 characters</small>');
+        }
+
+        // ===== Course Name =====
+        if (!courseName.value.trim()) {
+            valid = false;
+            courseName.style.borderColor = '#dc2626';
+            courseName.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Course name is required</small>');
+        }
+
+        // ===== Credits =====
+        const creditsValue = parseFloat(credits.value);
+        if (!credits.value || isNaN(creditsValue) || creditsValue <= 0) {
+            valid = false;
+            credits.style.borderColor = '#dc2626';
+            credits.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Credits must be a positive number</small>');
+        } else if (creditsValue > 6.00) {
+            valid = false;
+            credits.style.borderColor = '#dc2626';
+            credits.insertAdjacentHTML('afterend', '<small class="text-red-600 js-error">Credits cannot exceed 4.00</small>');
+        }
+
+        if (!valid) e.preventDefault();
+    });
+});
+</script>
