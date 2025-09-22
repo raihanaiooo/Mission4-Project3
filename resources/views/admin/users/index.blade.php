@@ -61,13 +61,13 @@
                                class="text-blue-600 hover:underline">Detail</a>
                             <a href="{{ route('admin.users.edit', $user['USER_ID']) }}" 
                                class="text-yellow-600 hover:underline">Edit</a>
-                            <form action="{{ route('admin.users.destroy', $user['USER_ID']) }}" 
-                                  method="POST" class="inline">
+                            <form action="{{ route('admin.users.destroy', $user['USER_ID']) }}" method="POST" class="inline delete-user-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
-                                        onclick="return confirm('Yakin hapus?')" 
-                                        class="text-red-600 hover:underline">
+                                        data-username="{{ $user['USERNAME'] }}"
+                                        data-role="{{ $user['ROLE'] }}"
+                                        class="text-red-600 hover:underline delete-user-btn">
                                     Hapus
                                 </button>
                             </form>
@@ -77,6 +77,28 @@
             </tbody>
         </table>
     </div>
-
 </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-user-btn');
+
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const username = btn.getAttribute('data-username');
+                const role = btn.getAttribute('data-role');
+                const message = `Apakah Anda yakin ingin menghapus user berikut?\n\n` +
+                                `Username: ${username}\n` +
+                                `Role: ${role}\n\n` +
+                                `Tindakan ini tidak bisa dibatalkan.`;
+
+                if (confirm(message)) {
+                    btn.closest('form').submit();
+                }
+            });
+        });
+    });
+</script>

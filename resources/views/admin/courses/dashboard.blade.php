@@ -54,12 +54,13 @@
                                class="text-blue-600 hover:underline">Detail</a>
                             <a href="{{ route('admin.courses.edit', $course['COURSE_ID']) }}" 
                                class="text-yellow-600 hover:underline">Edit</a>
-                            <form action="{{ route('admin.courses.destroy', $course['COURSE_ID']) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.courses.destroy', $course['COURSE_ID']) }}" method="POST" class="inline delete-course-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
-                                        onclick="return confirm('Yakin hapus?')" 
-                                        class="text-red-600 hover:underline">
+                                        data-course-name="{{ $course['COURSE_NAME'] }}"
+                                        data-credits="{{ $course['CREDITS'] }}"
+                                        class="text-red-600 hover:underline delete-course-btn">
                                     Hapus
                                 </button>
                             </form>
@@ -72,3 +73,26 @@
 
 </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-course-btn');
+
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const courseName = btn.getAttribute('data-course-name');
+                const credits = btn.getAttribute('data-credits');
+                const message = `Apakah Anda yakin ingin menghapus mata kuliah:\n\n` +
+                                `Mata Kuliah: ${courseName}\n` +
+                                `SKS: ${credits}\n\n` +
+                                `Data yang dihapus tidak bisa dikembalikan.`;
+
+                if (confirm(message)) {
+                    btn.closest('form').submit();
+                }
+            });
+        });
+    });
+</script>
